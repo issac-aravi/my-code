@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Chatbot</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        #chat-container {
+            max-width: 600px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #chat-messages {
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            background-color: #fff;
+        }
+
+        #user-input {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        #user-message {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+
+        #send-button {
+            padding: 8px 16px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+        <center><img src="C:\Users\Administrator\Documents\hack\healthcare-chatbot-master\healthcare-chatbot-master\Data\f7a08ffce51019b8fb331ac9409719b3-removebg-preview.png"></center>
+        <div id="user-input">
+            <input type="text" id="user-message" placeholder="Type your message...">
+            <button id="send-button" onclick="sendMessage()">Send</button>
+
+        </div>
+    </div>
+
+    <script>
+            var userMessage = document.getElementById('user-message').value;
+            if (userMessage.trim() !== '') {
+                appendMessage('User', userMessage);
+                // Call your chatbot logic here and get the response
+                // For simplicity, let's assume the chatbot echoes the user's message
+                var chatbotResponse = userMessage;
+                appendMessage('Chatbot', chatbotResponse);
+                document.getElementById('user-message').value = '';
+            }
+        
+
+        function appendMessage(sender, message) {
+            var chatMessages = document.getElementById('chat-messages');
+            var newMessage = document.createElement('div');
+            newMessage.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatMessages.appendChild(newMessage);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
+        }
+    </script>
+    <script>
+        function sendMessage() {
+            var userMessage = document.getElementById('user-message').value;
+            if (userMessage.trim() !== '') {
+                appendMessage('User', userMessage);
+    
+                // Send the user message to the backend API
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: userMessage
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var chatbotResponse = data.message;
+                    appendMessage('Chatbot', chatbotResponse);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+    
+                document.getElementById('user-message').value = '';
+            }
+        }
+    
+        function appendMessage(sender, message) {
+            var chatMessages = document.getElementById('chat-messages');
+            var newMessage = document.createElement('div');
+            newMessage.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatMessages.appendChild(newMessage);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
+        }
+    </script>    
+</body>
+</html>
